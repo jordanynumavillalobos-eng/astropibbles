@@ -8,6 +8,15 @@ NASA Space Apps 2026: *Abandoned but not Forgotten*. Las máquinas que NASA dej�
 - "Fantasmas" en las coordenadas reales (NSSDCA) de 3 artefactos: el retrorreflector del Apolo 11, el rover lunar del Apolo 15 y el Surveyor 3.
 - Historia por capítulos con animaciones al hacer scroll, sección "¿Mito o realidad?", lectura en voz alta y fuentes de NASA en cada ficha.
 
+## Modo exploración (fase 1)
+
+Pibble, con su traje de astronauta, camina por una "Luna de juguete" de 120 m de radio que usa las texturas reales de Moon Trek. Los sitios están en sus coordenadas reales y el contador convierte lo recorrido a km lunares reales.
+
+- `WASD` o flechas para moverse, `Shift` para correr, `Espacio` para saltar, `E` para examinar y `M` para el mapa.
+- El salto usa la gravedad lunar de NSSDCA (1,62 m/s²): con el mismo impulso que en la Tierra daría 0,5 m, en la Luna sube unos 3 m.
+- El destello del retrorreflector del Apolo 11 se ve desde lejos para despertar la curiosidad.
+- El código está en [`src/game/`](src/game/).
+
 ## Stack
 
 Vite, React 19, React Three Fiber 9 con drei (Three.js) y GSAP con ScrollTrigger.
