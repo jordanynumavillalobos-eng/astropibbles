@@ -2,8 +2,10 @@ import { useCallback, useEffect, useState } from 'react'
 import { artifacts } from './data/artifacts'
 import MoonScene from './components/MoonScene'
 import StoryPanel from './components/StoryPanel'
+import Welcome from './components/Welcome'
 
 export default function App() {
+  const [started, setStarted] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
   const [tiles, setTiles] = useState(null)
   const selected = artifacts.find((a) => a.id === selectedId) ?? null
@@ -52,6 +54,9 @@ export default function App() {
         Mapa: mosaico LRO WAC · <a href="https://trek.nasa.gov/moon/" target="_blank" rel="noreferrer">NASA Moon Trek</a>
         {tiles && tiles.failed > 0 && <span className="warn"> · {tiles.failed} teselas sin cargar</span>}
       </footer>
+
+      {/* La Luna carga sus teselas por detrás mientras Pibble da la bienvenida. */}
+      {!started && <Welcome onStart={() => setStarted(true)} />}
     </div>
   )
 }
