@@ -1,16 +1,22 @@
-# React + Vite
+# Abandonados, no olvidados
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+NASA Space Apps 2026: *Abandoned but not Forgotten*. Las máquinas que NASA dejó en la Luna cuentan su propia historia, en primera persona.
 
-Currently, two official plugins are available:
+## MVP
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Globo 3D de la Luna con las teselas oficiales de **NASA Moon Trek** (mosaico LRO WAC).
+- "Fantasmas" en las coordenadas reales (NSSDCA) de 3 artefactos: el retrorreflector del Apolo 11, el rover lunar del Apolo 15 y el Surveyor 3.
+- Historia por capítulos con animaciones al hacer scroll, sección "¿Mito o realidad?", lectura en voz alta y fuentes de NASA en cada ficha.
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Vite, React 19, React Three Fiber 9 con drei (Three.js) y GSAP con ScrollTrigger.
 
-## Expanding the Oxlint configuration
+```bash
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Regla de datos
+
+Cada dato de [`src/data/artifacts.js`](src/data/artifacts.js) debe venir de una página oficial de NASA (NSSDCA, nasa.gov, science.nasa.gov o trek.nasa.gov) y aparecer en su lista `sources`. Para añadir un artefacto, se copia un objeto de esa lista.

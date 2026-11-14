@@ -1,41 +1,57 @@
+import { useCallback, useEffect, useState } from 'react'
+import { artifacts } from './data/artifacts'
+import MoonScene from './components/MoonScene'
+import StoryPanel from './components/StoryPanel'
 
-import { useState } from 'react'
-import './App.css'
+export default function App() {
+  const [selectedId, setSelectedId] = useState(null)
+  const [tiles, setTiles] = useState(null)
+  const selected = artifacts.find((a) => a.id === selectedId) ?? null
 
-function App() {
-  const [iniciada, setIniciada] = useState(false)
+  const onSelect = useCallback((id) => setSelectedId(id), [])
+
+  useEffect(() => {
+    const onKey = (e) => e.key === 'Escape' && setSelectedId(null)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   return (
-    <main className="app">
-      <div className="estrellas"></div>
+    <div className={`app ${selected ? 'has-story' : ''}`}>
+      <div className="stage">
+        <MoonScene artifacts={artifacts} selected={selected} onSelect={onSelect} onTileStatus={setTiles} />
+      </div>
 
-      <section className="bienvenida">
-        <span className="etiqueta">NASA SPACE APPS CHALLENGE</span>
+      <header className="brand">
+        <h1>Abandonados<span>, no olvidados</span></h1>
+        <p>Las máquinas que NASA dejó en la Luna cuentan su historia.</p>
+      </header>
 
-        <div className="planeta">🪐</div>
+      {!selected && (
+        <nav className="roster" aria-label="Artefactos">
+          <p className="roster-hint">Toca un fantasma en la Luna o elige uno:</p>
+          <ul>
+            {artifacts.map((a) => (
+              <li key={a.id}>
+                <button style={{ '--ghost': a.color }} onClick={() => onSelect(a.id)}>
+                  <span className="dot" />
+                  <span>
+                    <strong>{a.nickname}</strong>
+                    <small>{a.name} · {a.year}</small>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
 
-        <h1>ASTROPIBBLES</h1>
-        <h2>Relatos del Espacio</h2>
+      {selected && <StoryPanel key={selected.id} artifact={selected} onClose={() => onSelect(null)} />}
 
-        <p>
-          ¡Hola, explorador! Soy Pibble y te acompañaré
-          a descubrir las increíbles historias de las
-          misiones espaciales.
-        </p>
-
-        <button onClick={() => setIniciada(true)}>
-          🚀 ¡Comenzar aventura!
-        </button>
-
-        {iniciada && (
-          <p className="mensaje">
-            ¡Prepárate, astronauta! Nuestra primera misión
-            está en camino.
-          </p>
-        )}
-      </section>
-    </main>
+      <footer className="credit">
+        Mapa: mosaico LRO WAC · <a href="https://trek.nasa.gov/moon/" target="_blank" rel="noreferrer">NASA Moon Trek</a>
+        {tiles && tiles.failed > 0 && <span className="warn"> · {tiles.failed} teselas sin cargar</span>}
+      </footer>
+    </div>
   )
 }
-
-export default App
