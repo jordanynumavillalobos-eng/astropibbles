@@ -138,3 +138,24 @@ export const artifacts = [
 // Nivel z: (2·2^z) columnas × (2^z) filas de teselas de 256 px.
 export const MOON_TREK_TILE = (z, row, col) =>
   `https://trek.nasa.gov/tiles/Moon/EQ/LRO_WAC_Mosaic_Global_303ppd_v02/1.0.0//default/default028mm/${z}/${row}/${col}.jpg`
+
+// Retrorreflectores: fuentes de "eco" para el receptor de señales de Pibble.
+// Coordenadas: NSSDCA lunar_sites.html (https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html)
+export const reflectors = [
+  { id: 'lrrr-apollo11', lat: 0.67345, lon: 23.47307 },
+  { id: 'lrrr-apollo15', lat: 26.13341, lon: 3.6285 },
+  { id: 'bonus-apollo14', lat: -3.64417, lon: -17.47865 },
+]
+
+// Hallazgo extra (sin historia completa): el retrorreflector del Apolo 14 en Fra Mauro.
+export const bonusSites = [
+  {
+    id: 'bonus-apollo14',
+    name: 'Retrorreflector del Apolo 14',
+    nickname: 'El tercer espejo',
+    lat: -3.64417,
+    lon: -17.47865,
+    color: '#7cf2ff',
+    source: { label: 'NSSDCA – Coordenadas de los sitios lunares', url: `${NSSDC}/planetary/lunar/lunar_sites.html` },
+  },
+]

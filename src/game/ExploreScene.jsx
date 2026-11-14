@@ -7,11 +7,13 @@ import { latLonToVec3 } from '../lib/geo'
 import { R } from './constants'
 import Player from './Player'
 import { SiteFrame, Retroreflector, LunarRover, Surveyor, Beacon } from './props'
+import { bonusSites } from '../data/artifacts'
 
 const PROPS = {
   'lrrr-apollo11': Retroreflector,
   'lrv-apollo15': LunarRover,
   surveyor3: Surveyor,
+  'bonus-apollo14': Retroreflector,
 }
 
 // Generador pseudoaleatorio con semilla: el suelo es siempre el mismo.
@@ -90,9 +92,9 @@ function Earth() {
 
 // beacons: ids de los sitios cuyo retrorreflector emite destello
 // (el del Apolo 15 solo se enciende cuando Pibble conoce la pista).
-export default function ExploreScene({ artifacts, beacons, paused, onNear, onInteract }) {
+export default function ExploreScene({ artifacts, beacons, paused, onNear, onInteract, onBounce }) {
   const sites = useMemo(
-    () => artifacts.map((a) => ({ ...a, position: latLonToVec3(a.lat, a.lon, R) })),
+    () => [...artifacts, ...bonusSites].map((a) => ({ ...a, position: latLonToVec3(a.lat, a.lon, R) })),
     [artifacts],
   )
   return (
@@ -120,7 +122,7 @@ export default function ExploreScene({ artifacts, beacons, paused, onNear, onInt
           </SiteFrame>
         )
       })}
-      <Player sites={sites} paused={paused} onNear={onNear} onInteract={onInteract} />
+      <Player sites={sites} paused={paused} onNear={onNear} onInteract={onInteract} onBounce={onBounce} />
     </Canvas>
   )
 }

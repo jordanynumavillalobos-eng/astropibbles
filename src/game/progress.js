@@ -32,7 +32,7 @@ export function useProgress() {
     const unlocked = (e) => !e.unlockedBy || read.has(e.unlockedBy)
     const entries = logEntries.map((e) => ({
       ...e,
-      unlocked: e.kind === 'artifact' ? found.has(e.id) : unlocked(e),
+      unlocked: e.kind === 'artifact' || e.kind === 'bonus' ? found.has(e.id) : unlocked(e),
       resolved: e.kind === 'rumor' ? found.has(e.target) : e.kind === 'artifact' ? read.has(e.id) : false,
     }))
     return { found, read, entries, complete: logEntries.filter((e) => e.kind === 'artifact').every((e) => read.has(e.id)) }

@@ -5,7 +5,9 @@ export const input = {
   run: false,
   jumpQueued: false,
   interactQueued: false,
-  touch: { forward: 0, turn: 0 },
+  thrust: false, // Espacio mantenido (motor del saltador)
+  receiver: false, // receptor de señales (Q)
+  touch: { forward: 0, turn: 0, thrust: false },
 }
 
 const held = new Set()
@@ -15,6 +17,7 @@ function recompute() {
   input.forward = (k('KeyW', 'ArrowUp') ? 1 : 0) - (k('KeyS', 'ArrowDown') ? 1 : 0) || input.touch.forward
   input.turn = (k('KeyA', 'ArrowLeft') ? 1 : 0) - (k('KeyD', 'ArrowRight') ? 1 : 0) || input.touch.turn
   input.run = k('ShiftLeft', 'ShiftRight')
+  input.thrust = k('Space') || input.touch.thrust
 }
 
 export function setTouch(axis, value) {
@@ -23,12 +26,13 @@ export function setTouch(axis, value) {
 }
 
 export function bindKeyboard() {
-  const GAME_KEYS = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'ShiftLeft', 'ShiftRight', 'KeyE']
+  const GAME_KEYS = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'ShiftLeft', 'ShiftRight', 'KeyE', 'KeyQ']
   const down = (e) => {
     if (!GAME_KEYS.includes(e.code)) return
     e.preventDefault()
     if (!e.repeat && e.code === 'Space') input.jumpQueued = true
     if (!e.repeat && e.code === 'KeyE') input.interactQueued = true
+    if (!e.repeat && e.code === 'KeyQ') input.receiver = !input.receiver
     held.add(e.code)
     recompute()
   }

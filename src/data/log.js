@@ -45,11 +45,22 @@ export const logEntries = [
   },
 ]
 
+// Hallazgo extra: no lo señala ninguna pista con palabras; hay que encontrarlo con el receptor (Q).
+logEntries.push({
+  id: 'bonus-apollo14',
+  kind: 'bonus',
+  title: 'El tercer espejo',
+  text: 'Con el receptor capté un eco en Fra Mauro: es el retrorreflector del Apolo 14. ¡Ya conozco a toda la familia de El Espejo!',
+  hintedBy: 'lrrr-apollo11',
+  pos: [10, 66],
+})
+
 // Conexiones del tablero: rumor → máquina que señala; máquina → rumores que desbloquea.
 export const logLinks = logEntries.flatMap((e) => {
   const links = []
   if (e.kind === 'rumor') links.push([e.id, e.target])
   if (e.unlockedBy) links.push([e.unlockedBy, e.id])
+  if (e.hintedBy) links.push([e.hintedBy, e.id])
   return links
 })
 
@@ -58,4 +69,5 @@ export const discoveryLines = {
   'lrrr-apollo11': '¡Era esto lo que brillaba! Una placa llena de cubos que devuelve la luz.',
   'lrv-apollo15': '¡Un coche! Con ruedas de malla de acero… y un retrorreflector cerca.',
   surveyor3: 'Una nave de tres patas, sola en el Océano de las Tormentas.',
+  'bonus-apollo14': '¡El eco venía de aquí! Otro retrorreflector, el del Apolo 14, en Fra Mauro.',
 }

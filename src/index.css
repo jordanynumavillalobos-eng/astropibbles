@@ -267,3 +267,43 @@ kbd {
   .log-head { grid-template-columns: 1fr; padding: 16px; }
   .log-actions { grid-row: auto; grid-column: 1; }
 }
+
+/* ---------- Fase 3: receptor, saltador, sonido ---------- */
+.hud-help .note { color: var(--muted); font-size: .8rem; margin-top: 6px; }
+.receiver, .lander-panel {
+  position: absolute; right: 20px; top: 150px; width: 260px; display: grid; gap: 6px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; backdrop-filter: blur(8px);
+}
+.receiver .label, .lander-panel .label { font-size: .7rem; text-transform: uppercase; letter-spacing: .12em; color: #7cf2ff; }
+.receiver .sub, .lander-panel .sub { font-size: .8rem; color: var(--muted); margin: 0; }
+.meter { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; height: 22px; align-items: end; }
+.meter span { background: rgba(255,255,255,.1); border-radius: 3px; height: 30%; }
+.meter span:nth-child(n+4) { height: 50%; } .meter span:nth-child(n+7) { height: 75%; } .meter span:nth-child(n+9) { height: 100%; }
+.meter span.on { background: #7cf2ff; box-shadow: 0 0 8px #7cf2ff; }
+.lander-panel { top: auto; bottom: 20px; right: 50%; transform: translateX(50%); width: 300px; text-align: center; border-color: #ff8a3d; }
+.lander-panel .label { color: #ff8a3d; }
+.lander-panel p { margin: 0; font-size: .9rem; }
+.lander-panel.warn { border-color: #ff5a5a; box-shadow: 0 0 20px rgba(255, 90, 90, .4); }
+.lander-panel.warn .sub { color: #ff8a8a; }
+.fuel { height: 8px; border-radius: 999px; background: rgba(255,255,255,.1); overflow: hidden; }
+.fuel span { display: block; height: 100%; background: linear-gradient(90deg, #ff6b35, #ffb347); transition: width .12s linear; }
+.log-card.bonus { border-color: #7cf2ff; border-style: dashed; }
+.log-card.bonus .kind { color: #7cf2ff; }
+.log-card.mystery .hint { font-size: .65rem; color: #7cf2ff; white-space: nowrap; position: absolute; top: 100%; margin-top: 6px; }
+@media (pointer: coarse) {
+  .touchpad .act { position: absolute; right: 196px; bottom: 120px; width: 56px; height: 56px; border-radius: 50% !important; }
+  .touchpad .recv { position: absolute; right: 270px; bottom: 40px; width: 56px; height: 56px; border-radius: 50% !important; }
+  .lander-panel { bottom: 200px; }
+}
+@media (max-width: 760px) {
+  .receiver { right: 16px; left: 16px; width: auto; top: 140px; }
+  .lander-panel { width: calc(100% - 32px); bottom: 128px; }
+}
+@media (max-width: 760px) {
+  .hud-top { left: 12px; right: 12px; top: 12px; }
+  .hud-brand { display: none; }
+  .hud-actions { flex-wrap: wrap; justify-content: flex-end; width: 100%; gap: 6px; }
+  .hud-actions button { font-size: .75rem; padding: 5px 10px; }
+  .compass { top: 52px; }
+  .receiver { top: 136px; }
+}

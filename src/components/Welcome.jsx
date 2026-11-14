@@ -4,12 +4,13 @@ import './Welcome.css'
 
 // Pantalla de bienvenida de Pibble (diseño original de Jordan, PR #1).
 // Al pulsar "Comenzar aventura" se desvanece y deja ver la Luna.
-export default function Welcome({ onStart }) {
+export default function Welcome({ onStart, onClick }) {
   const [iniciada, setIniciada] = useState(false)
   const root = useRef()
 
   const start = () => {
     if (iniciada) return
+    onClick?.() // el audio solo puede arrancar tras un gesto del usuario
     setIniciada(true)
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     gsap.to(root.current, {

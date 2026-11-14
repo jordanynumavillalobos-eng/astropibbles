@@ -8,7 +8,7 @@ NASA Space Apps 2026: *Abandoned but not Forgotten*. Las máquinas que NASA dej�
 - "Fantasmas" en las coordenadas reales (NSSDCA) de 3 artefactos: el retrorreflector del Apolo 11, el rover lunar del Apolo 15 y el Surveyor 3.
 - Historia por capítulos con animaciones al hacer scroll, sección "¿Mito o realidad?", lectura en voz alta y fuentes de NASA en cada ficha.
 
-## Modo exploración (fase 1)
+## Modo exploración
 
 Pibble, con su traje de astronauta, camina por una "Luna de juguete" de 120 m de radio que usa las texturas reales de Moon Trek. Los sitios están en sus coordenadas reales y el contador convierte lo recorrido a km lunares reales.
 
@@ -17,6 +17,9 @@ Pibble, con su traje de astronauta, camina por una "Luna de juguete" de 120 m de
 - El destello del retrorreflector del Apolo 11 se ve desde lejos para despertar la curiosidad.
 - La **bitácora** (`B`) une las pistas: cada historia leída desbloquea la siguiente, y la brújula guía hasta ella. Las pistas están en [`src/data/log.js`](src/data/log.js) y solo usan datos verificados.
 - El progreso se guarda en el navegador. Al leer las 3 historias aparece el final de la misión.
+- **Receptor de señales** (`Q`): suena más fuerte cuanto mejor apuntas a un retrorreflector. Así se encuentra un hallazgo extra, el espejo del Apolo 14 en Fra Mauro (coordenadas de NSSDCA).
+- **Saltador lunar**: el módulo en el que llegó Pibble. Pulsa `E` junto a él para subir y mantén `Espacio` para encender el motor. Si aterrizas a más de 2,2 m/s, rebotas, como el Surveyor 3.
+- **Sonido** sintetizado con Web Audio, sin archivos. En la Luna no hay aire, así que lo que se oye llega por la radio y el traje de Pibble.
 - El código está en [`src/game/`](src/game/).
 
 ## Stack

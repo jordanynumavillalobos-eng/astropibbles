@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { artifacts } from './data/artifacts'
+import { artifacts, bonusSites } from './data/artifacts'
 import { logEntries, discoveryLines } from './data/log'
 import MoonScene from './components/MoonScene'
 import StoryPanel from './components/StoryPanel'
@@ -12,12 +12,14 @@ import { useToasts } from './game/useToasts'
 import { bindKeyboard } from './game/input'
 import { game, spawn, latLonOf } from './game/store'
 import { useProgress } from './game/progress'
+import { initAudio, sfx } from './game/audio'
 
 // Pibble aterriza en el Mar de la Tranquilidad, a unos 250 km reales del Apolo 11,
 // mirando de reojo hacia el destello del retrorreflector.
 spawn(4, 31, 0.67345, 23.47307, 0.18)
 
 const artById = Object.fromEntries(artifacts.map((a) => [a.id, a]))
+const siteById = Object.fromEntries([...artifacts, ...bonusSites].map((a) => [a.id, a]))
 
 export default function App() {
   const [mode, setMode] = useState('welcome') // welcome | explore | map
@@ -43,13 +45,16 @@ export default function App() {
       setNearId(id)
       if (!id || latest.current.found.has(id)) return
       latest.current.markFound(id)
-      const a = artById[id]
-      push({ kind: 'found', label: '¡Descubrimiento!', title: a.nickname, text: discoveryLines[id], color: a.color })
+      const a = siteById[id]
+      sfx.discover()
+      push({ kind: 'found', label: a.id.startsWith('bonus') ? '¡Hallazgo extra!' : '¡Descubrimiento!', title: a.nickname, text: discoveryLines[id], color: a.color })
+      if (a.id.startsWith('bonus')) setNewLog(true)
     },
     [push],
   )
 
   const openStory = useCallback((id) => {
+    if (!artById[id]) return
     setLogOpen(false)
     setSelectedId(id)
   }, [])
@@ -65,6 +70,7 @@ export default function App() {
     if (id && !latest.current.read.has(id)) {
       latest.current.markRead(id)
       for (const e of logEntries.filter((x) => x.unlockedBy === id)) {
+        sfx.clue()
         push({
           kind: 'log',
           label: e.kind === 'teaser' ? '📓 Bitácora' : '📓 Nueva pista',
@@ -76,6 +82,21 @@ export default function App() {
     }
     selRef.current = null
     setSelectedId(null)
+  }, [push])
+
+  // Primer rebote con el saltador: la misma lección que el Surveyor 3.
+  const bounced = useRef(false)
+  const onBounce = useCallback(() => {
+    if (bounced.current) return
+    bounced.current = true
+    push({
+      kind: 'log',
+      label: '¡Rebote!',
+      title: 'Igual que el Surveyor 3',
+      text: 'Sus motores no se apagaron a tiempo y tocó el suelo tres veces. Baja más despacio.',
+      color: '#c9a2ff',
+      duration: 7000,
+    })
   }, [push])
 
   const toggleMap = useCallback(() => {
@@ -134,6 +155,7 @@ export default function App() {
             paused={!!selected || logOpen || showEnding || mode !== 'explore'}
             onNear={onNear}
             onInteract={openStory}
+            onBounce={onBounce}
           />
         </div>
       )}
@@ -216,6 +238,9 @@ export default function App() {
               Ninguna está olvidada: el retrorreflector aún devuelve la luz, el rover sigue aparcado en Hadley y las piezas del
               Surveyor 3 viajaron de vuelta a la Tierra con el Apolo 12.
             </p>
+            {progress.found.has('bonus-apollo14') && (
+              <p>Y además encontraste <strong>el tercer espejo</strong> del Apolo 14 con tu receptor. 📡</p>
+            )}
             <p className="teaser">Próxima misión de Pibble: Marte.</p>
             <button onClick={progress.setCompletedSeen}>Seguir explorando la Luna</button>
           </div>
@@ -224,7 +249,7 @@ export default function App() {
 
       <Toasts toasts={toasts} />
 
-      {mode === 'welcome' && <Welcome onStart={() => setMode('explore')} />}
+      {mode === 'welcome' && <Welcome onStart={() => setMode('explore')} onClick={initAudio} />}
     </div>
   )
 }

@@ -24,3 +24,11 @@ export const INTERACT_RADIUS = 7
 
 // El Sol ilumina la cara visible (donde están los sitios Apolo y Surveyor).
 export const SUN_DIR = new THREE.Vector3(1, 0.45, 0.25).normalize()
+
+// Saltador lunar (valores de juego, no de una nave real)
+export const HOP_SPEED = 16 // velocidad horizontal en el aire
+export const THRUST = 3.4 // aceleración del motor (m/s²), mayor que la gravedad lunar
+export const BURN = 0.14 // combustible gastado por segundo de motor
+export const REFUEL = 0.35 // recarga por segundo, posado en el suelo
+export const SAFE_LANDING = 2.2 // m/s: si bajas más rápido, rebotas
+export const LANDER_RADIUS = 5.5 // distancia para subir al saltador

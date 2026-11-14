@@ -56,6 +56,17 @@ export default function Logbook({ artifacts, progress, onClose, onOpenStory }) {
             return (
               <div key={e.id} className="log-card mystery" style={style}>
                 <span className="q">?</span>
+                {e.kind === 'bonus' && <span className="hint">📡 ¿Un eco?</span>}
+              </div>
+            )
+          }
+
+          if (e.kind === 'bonus') {
+            return (
+              <div key={e.id} className="log-card bonus" style={style}>
+                <span className="kind">Hallazgo extra</span>
+                <strong>{e.title}</strong>
+                <p>{e.text}</p>
               </div>
             )
           }
