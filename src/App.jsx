@@ -1,8 +1,17 @@
-
+import GaleriaNASA from "./components/GaleriaNASA";
+import { buscarImagenesNASA } from "./services/nasaApi";
 import { useState } from 'react'
 import './App.css'
 
 function App() {
+  const probarNASA = async () => {
+  try {
+    const imagenes = await buscarImagenesNASA();
+    console.log("Imágenes obtenidas de NASA:", imagenes);
+  } catch (error) {
+    console.error("Error al conectar con NASA:", error);
+  }
+};
   const [iniciada, setIniciada] = useState(false)
 
   return (
@@ -27,6 +36,10 @@ function App() {
           🚀 ¡Comenzar aventura!
         </button>
 
+        <button onClick={probarNASA}>
+         📡 Probar conexión NASA
+        </button>
+
         {iniciada && (
           <p className="mensaje">
             ¡Prepárate, astronauta! Nuestra primera misión
@@ -34,6 +47,9 @@ function App() {
           </p>
         )}
       </section>
+
+<GaleriaNASA />
+
     </main>
   )
 }

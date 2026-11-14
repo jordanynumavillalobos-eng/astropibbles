@@ -1,11 +1,13 @@
 
+
 .app {
   min-height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
   background: radial-gradient(
     ellipse at center,
     #253b86 0%,
@@ -17,6 +19,7 @@
   padding: 30px;
   box-sizing: border-box;
 }
+
 
 .estrellas {
   position: absolute;
@@ -114,5 +117,69 @@
 
   .bienvenida p {
     font-size: 16px;
+  }
+}
+
+
+/* Pantalla de bienvenida */
+.bienvenida {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Galería de fotografías NASA */
+.galeria-nasa {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  width: 100%;
+  margin-top: 30px;
+  text-align: left;
+}
+
+.galeria-nasa article {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 15px;
+}
+
+.galeria-nasa img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.galeria-nasa h3 {
+  font-size: 16px;
+  margin: 12px 0 8px;
+  color: #ffffff;
+}
+
+.galeria-nasa p {
+  font-size: 13px;
+  color: #a5d8ff;
+}
+
+/* Adaptación para tablet */
+@media (max-width: 900px) {
+  .galeria-nasa {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Adaptación para celular */
+@media (max-width: 600px) {
+  .galeria-nasa {
+    grid-template-columns: 1fr;
+  }
+
+  .galeria-nasa img {
+    height: 220px;
   }
 }
