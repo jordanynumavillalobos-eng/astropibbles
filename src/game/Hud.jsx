@@ -1,9 +1,21 @@
 import { useEffect, useState } from 'react'
+import * as THREE from 'three'
 import { game } from './store'
 import { setTouch, input } from './input'
-import { unitsToRealKm, EARTH_JUMP_M } from './constants'
+import { unitsToRealKm, EARTH_JUMP_M, MOON_RADIUS_KM } from './constants'
+import { latLonToVec3 } from '../lib/geo'
 
 const fmt = (n, d = 1) => n.toLocaleString('es', { minimumFractionDigits: d, maximumFractionDigits: d })
+const tangent = new THREE.Vector3()
+const cross = new THREE.Vector3()
+
+// Ángulo (rad, + = a la izquierda) y distancia real (km) desde Pibble hasta un punto.
+function bearingTo(target) {
+  const cos = THREE.MathUtils.clamp(game.n.dot(target), -1, 1)
+  tangent.copy(target).addScaledVector(game.n, -cos).normalize()
+  const angle = Math.atan2(cross.crossVectors(game.f, tangent).dot(game.n), game.f.dot(tangent))
+  return { angle, km: Math.acos(cos) * MOON_RADIUS_KM }
+}
 
 function TouchPad() {
   const hold = (axis, value) => ({
@@ -27,22 +39,23 @@ function TouchPad() {
   )
 }
 
-export default function Hud({ artifacts, nearId, onInteract, onMap }) {
-  const [stats, setStats] = useState({ km: 0, jump: 0, airborne: false })
-  const [hint, setHint] = useState(true)
+export default function Hud({ artifacts, nearId, trackedRumor, newLog, onInteract, onMap, onLog }) {
+  const [stats, setStats] = useState({ km: 0, jump: 0, bearing: null })
   const [help, setHelp] = useState(true)
   const near = artifacts.find((a) => a.id === nearId)
+  const targetArt = trackedRumor && artifacts.find((a) => a.id === trackedRumor.target)
 
   useEffect(() => {
+    const target = targetArt ? latLonToVec3(targetArt.lat, targetArt.lon, 1) : null
     const id = setInterval(() => {
-      setStats({ km: unitsToRealKm(game.distance), jump: game.lastJump, airborne: !game.grounded })
-    }, 150)
-    const t = setTimeout(() => setHint(false), 9000)
-    return () => {
-      clearInterval(id)
-      clearTimeout(t)
-    }
-  }, [])
+      setStats({
+        km: unitsToRealKm(game.distance),
+        jump: game.lastJump,
+        bearing: target ? bearingTo(target) : null,
+      })
+    }, 120)
+    return () => clearInterval(id)
+  }, [targetArt])
 
   return (
     <div className="hud">
@@ -50,6 +63,7 @@ export default function Hud({ artifacts, nearId, onInteract, onMap }) {
         <span className="hud-brand">ASTROPIBBLES</span>
         <div className="hud-actions">
           <button onClick={() => setHelp((h) => !h)} aria-expanded={help}>Controles</button>
+          <button onClick={onLog} className={newLog ? 'has-new' : ''}>📓 Bitácora (B)</button>
           <button onClick={onMap}>🗺 Mapa (M)</button>
         </div>
       </div>
@@ -58,11 +72,23 @@ export default function Hud({ artifacts, nearId, onInteract, onMap }) {
         <div className="hud-help" role="note">
           <p><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> o flechas: caminar y girar</p>
           <p><kbd>Shift</kbd>: correr · <kbd>Espacio</kbd>: saltar · <kbd>E</kbd>: examinar</p>
+          <p><kbd>B</kbd>: bitácora · <kbd>M</kbd>: mapa</p>
           <button className="link" onClick={() => setHelp(false)}>Entendido</button>
         </div>
       )}
 
-      {hint && <p className="hud-hint">Algo brilla en el horizonte…</p>}
+      {trackedRumor && stats.bearing && (
+        <div className="compass" aria-live="polite">
+          <div className="compass-dial">
+            <span className="compass-arrow" style={{ transform: `rotate(${-stats.bearing.angle}rad)` }}>▲</span>
+          </div>
+          <div>
+            <span className="label">Siguiendo pista</span>
+            <strong>{trackedRumor.title}</strong>
+            <span className="sub">a {fmt(stats.bearing.km, 0)} km</span>
+          </div>
+        </div>
+      )}
 
       <div className="hud-stats">
         <p>

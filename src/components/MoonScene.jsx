@@ -17,8 +17,10 @@ function Moon({ onTileStatus }) {
   )
 }
 
-export default function MoonScene({ artifacts, selected, onSelect, onTileStatus }) {
-  const start = latLonToVec3(15, 10, 3.4)
+const noop = () => {}
+
+export default function MoonScene({ artifacts, selected, onSelect, onTileStatus, pibble }) {
+  const start = pibble ? latLonToVec3(pibble.lat, pibble.lon, 3.4) : latLonToVec3(15, 10, 3.4)
   return (
     <Canvas
       camera={{ position: [start.x, start.y, start.z], fov: 40, near: 0.01, far: 200 }}
@@ -34,6 +36,13 @@ export default function MoonScene({ artifacts, selected, onSelect, onTileStatus 
       {artifacts.map((a) => (
         <GhostMarker key={a.id} artifact={a} selected={selected?.id === a.id} onSelect={onSelect} />
       ))}
+      {pibble && (
+        <GhostMarker
+          artifact={{ id: 'pibble', nickname: '🐾 Pibble', color: '#ff8a3d', status: 'active', ...pibble }}
+          selected={false}
+          onSelect={noop}
+        />
+      )}
       <CameraRig target={selected} />
     </Canvas>
   )

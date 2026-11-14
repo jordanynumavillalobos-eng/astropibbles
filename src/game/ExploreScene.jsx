@@ -88,7 +88,9 @@ function Earth() {
   )
 }
 
-export default function ExploreScene({ artifacts, paused, onNear, onInteract }) {
+// beacons: ids de los sitios cuyo retrorreflector emite destello
+// (el del Apolo 15 solo se enciende cuando Pibble conoce la pista).
+export default function ExploreScene({ artifacts, beacons, paused, onNear, onInteract }) {
   const sites = useMemo(
     () => artifacts.map((a) => ({ ...a, position: latLonToVec3(a.lat, a.lon, R) })),
     [artifacts],
@@ -106,7 +108,15 @@ export default function ExploreScene({ artifacts, paused, onNear, onInteract }) 
         return (
           <SiteFrame key={s.id} lat={s.lat} lon={s.lon} yaw={0.6}>
             {Prop && <Prop />}
-            {s.id === 'lrrr-apollo11' && <Beacon color={s.color} />}
+            {s.id === 'lrrr-apollo11' && beacons.has(s.id) && <Beacon color={s.color} />}
+            {s.id === 'lrv-apollo15' && (
+              // Retrorreflector del Apolo 15 (NSSDCA: 26.13341 N, 3.62850 E),
+              // a pocos pasos del rover a esta escala.
+              <group position={[3.5, 0, -2.5]} rotation={[0, -0.6, 0]}>
+                <Retroreflector />
+                {beacons.has(s.id) && <Beacon color="#7cf2ff" />}
+              </group>
+            )}
           </SiteFrame>
         )
       })}

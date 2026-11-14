@@ -15,6 +15,8 @@ Pibble, con su traje de astronauta, camina por una "Luna de juguete" de 120 m de
 - `WASD` o flechas para moverse, `Shift` para correr, `Espacio` para saltar, `E` para examinar y `M` para el mapa.
 - El salto usa la gravedad lunar de NSSDCA (1,62 m/s²): con el mismo impulso que en la Tierra daría 0,5 m, en la Luna sube unos 3 m.
 - El destello del retrorreflector del Apolo 11 se ve desde lejos para despertar la curiosidad.
+- La **bitácora** (`B`) une las pistas: cada historia leída desbloquea la siguiente, y la brújula guía hasta ella. Las pistas están en [`src/data/log.js`](src/data/log.js) y solo usan datos verificados.
+- El progreso se guarda en el navegador. Al leer las 3 historias aparece el final de la misión.
 - El código está en [`src/game/`](src/game/).
 
 ## Stack
